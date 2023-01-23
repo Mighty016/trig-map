@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="frame"></div>
+    <div style="height: 90vh;">
+        <canvas id="canvas" style="border: 1px solid black;"></canvas>
+    </div>
+    
+    <script>
+        
+        const canvas = document.getElementById("canvas");
+
+        fitToContainer(canvas);
+
+        function fitToContainer(canvas){
+            // Make it visually fill the positioned parent
+            canvas.style.width ='100%';
+            canvas.style.height='100%';
+            // ...then set the internal size to match
+            canvas.width  = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+
+        const frameDisplay = document.getElementById("frame");
+
+
+
+        if(canvas.getContext){
+            /** @type {CanvasRenderingContext2D} */
+            const ctx = canvas.getContext('2d');
+            // ctx.canvas.width  = window.innerWidth;
+            // ctx.canvas.height = window.innerWidth/16 * 7;
+            const DISTANCE_SCALE = 10;
+
+            const frame = {
+                x:0,
+                y:0,
+                xend:function(){
+                    return this.x + ctx.canvas.width;
+                },
+                yend:function(){
+                    return this.y + ctx.canvas.height;
+                },
+                updateDisplay:function(){
+                    frameDisplay.textContent = `${this.x},${this.y},${this.xend()},${this.yend()}`
+                }
+            }
+
+            
+            function clearCanvas(){
+                ctx.fillStyle = "white"
+                ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
+            }
+
+            function drawPoint(point){
+                const drawOffset = [ctx.canvas.width / 2 + frame.x, ctx.canvas.height / 2 + frame.y];
+                ctx.fillStyle = point[2];
+                ctx.fillRect(point[0] + drawOffset[0],drawOffset[1] - point[1],10,10);
+            }
+
+            function radian(degree){
+                return degree * Math.PI / 180; 
+            }
+
+            function getPointFromAngleAndDistance({degree,distance,offset}){
+                return [
+                    distance * Math.sin(radian(degree)) + offset[0],
+                    distance * Math.cos(radian(degree)) + offset[1],
+                    "green"
+                ]
+            }
+
+           
+           let points = [[0,0,"red"]];
+           const REFERENCE_DISTANCE = 12.1;
+
+
+            points.push(getPointFromAngleAndDistance({
+                degree : 120,
+                distance : REFERENCE_DISTANCE * DISTANCE_SCALE,
+                offset : points[0]
+            })); 
+
+            function AASgetAngleInTriangle(degreeA,degreeB){
+
+                const MAX_ANGLE = 360
+                const MAX_TRIANGLE_ANGLE = 180
+                let angleA = Math.abs(120 - degreeA);
+                angleA = (angleA > MAX_TRIANGLE_ANGLE) ? MAX_ANGLE - angleA : angleA; 
+
+                let angleB = Math.abs(300 - degreeB);
+                angleB = (angleB > MAX_TRIANGLE_ANGLE) ? MAX_ANGLE - angleB : angleB;
+                if (angleA + angleB >= 180) throw `ASS : more than 180 degrees`
+
+                let angleC = MAX_TRIANGLE_ANGLE - angleA - angleB;
+
+                return [angleA,angleB,angleC];
+            }
+
+            function AASgetDistance(angleB,angleC){
+                return REFERENCE_DISTANCE * Math.sin(radian(angleB)) / Math.sin(radian(angleC));
+            }
+
+            const [angleA,angleB,angleC] = AASgetAngleInTriangle(50,20);
+            const distanceAC = AASgetDistance(angleB , angleC); 
+             
+            
+            points.push(getPointFromAngleAndDistance({
+                degree : 50,
+                distance : distanceAC * DISTANCE_SCALE,
+                offset : points[0]
+            }));
+
+            const [angleA2,angleB2,angleC2] = AASgetAngleInTriangle(85,66);
+            
+            // const distanceAD = REFERENCE_DISTANCE * angleC2 / angleB2;
+            const distanceAD = AASgetDistance(angleB2 , angleC2); 
+            console.log(angleA2,angleB2,angleC2)
+            
+            
+            points.push(getPointFromAngleAndDistance({
+                degree : 85,
+                distance : distanceAD * DISTANCE_SCALE,
+                offset : points[0]
+            }));
+
+            // points.push(getPointFromAngleAndDistance({
+            //     degree : 180,
+            //     distance : distanceAD * DISTANCE_SCALE,
+            //     offset : points[0]
+            // }));
+
+            points.forEach(val=>drawPoint(val));
+            frame.updateDisplay()
+
+            window.onkeydown = function({keyCode}){
+                console.log(keyCode)
+                switch (keyCode) {
+                    case 37:
+                        frame.x += DISTANCE_SCALE
+                        break;
+                    case 38:
+                        frame.y += DISTANCE_SCALE
+                        break;
+                    case 39:
+                        frame.x -= DISTANCE_SCALE
+                        break;
+                    case 40:
+                        frame.y -= DISTANCE_SCALE
+                        break;
+                
+                    default:
+                        break;
+                }
+                clearCanvas()
+                points.forEach(val=>drawPoint(val));
+                frame.updateDisplay()
+
+
+            }
+
+            
+
+            
+            
+        }
+        else{
+            console.log("no canvas get context, element may not be a canvas");
+        }
+        
+        
+        
+    </script>
+</body>
+</html>
