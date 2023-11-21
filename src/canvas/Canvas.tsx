@@ -17,18 +17,22 @@ export default function Canvas(
 
   useEffect(()=>{
     console.log(points);
-    if(canvas.current == null) return;
-    canvas.current.width = canvas.current.offsetWidth;
-    canvas.current.height = canvas.current.offsetHeight;
+    
     setFrameFunction(()=>{
       return moveToPoint;
     })
-    clearCanvas();
-    
-    drawPoints();
-    drawFrameCoord();
+    redraw()
     
   },[frame,points])
+
+  function redraw(){
+    if(canvas.current == null) return;
+    canvas.current.width = canvas.current.offsetWidth;
+    canvas.current.height = canvas.current.offsetHeight;
+    clearCanvas();
+    drawPoints();
+    drawFrameCoord();
+  }
 
   function handleKeyDown({keyCode} :{keyCode:number}){
     const newFrame = [...frame];
@@ -107,7 +111,7 @@ export default function Canvas(
 
   return (
     <div>
-      <canvas id="canvas" ref={canvas} onKeyDown={handleKeyDown} tabIndex={0}></canvas>
+      <canvas id="canvas" ref={canvas} onKeyDown={handleKeyDown} tabIndex={0} onResize={redraw}></canvas>
     </div>
   )
 }

@@ -1,6 +1,15 @@
 .Form{
     display: flex;
     flex-direction: column;
+    position: fixed;
+    min-width: 400px;
+    max-width: 100vw;
+    z-index: 10000000;
+    overflow: scroll;
+}
+
+.Form select{
+  width: 100px;
 }
 
 .AddButtons{

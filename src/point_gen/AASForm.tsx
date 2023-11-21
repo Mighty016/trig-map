@@ -49,10 +49,10 @@ export default function AASForm(
             <>
                 <button onClick={addPoint}>add</button>
                 <select ref={firstPoint}>
-                    {points.map((val,index)=><option value={index}>({val.x},{val.y})</option>)}
+                    {points.map((val,index)=><option value={index}>({val.x.toFixed(2)},{val.y.toFixed(2)})</option>)}
                 </select>
                 <select ref={secondPoint}>
-                    {points.map((val,index)=><option value={index}>({val.x},{val.y})</option>)}
+                    {points.map((val,index)=><option value={index}>({val.x.toFixed(2)},{val.y.toFixed(2)})</option>)}
                 </select>
                 
                 <input placeholder='compass angle First to Second' type="number" pattern='[0-9]' ref={angleFirstToSecond}/>
@@ -72,7 +72,7 @@ export default function AASForm(
     function showPoint(){
         return(
             <>
-                <div> Added Point : ({point!.x},{point!.y})</div>
+                <div> Added Point : ({point!.x.toFixed(2)},{point!.y.toFixed(2)})</div>
                 <button onClick={setMoveToPoint}>move to point</button>
                 <button onClick={removeSelf}>X</button>
             </>

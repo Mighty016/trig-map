@@ -60,16 +60,17 @@ function App() {
 
   return (
     <div className="App">
-      <Canvas 
-        points={points} 
-        scale={DISTANCE_SCALE} 
-        setFrameFunction={setUpdateFrameFunc}
-      />
-      <Form 
+      
+      {/* <Form 
         AddPoints={addPoints} 
         removePoints={removePoints} 
         points={points} 
         moveToPoint={updateFrameFunc}
+      /> */}
+      <Canvas 
+        points={points} 
+        scale={DISTANCE_SCALE} 
+        setFrameFunction={setUpdateFrameFunc}
       />
     </div>
   );

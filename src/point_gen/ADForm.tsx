@@ -42,7 +42,7 @@ export default function ADForm(
             <>
                 <button onClick={addPoint}>add</button>
                 <select ref={refPoint}>
-                    {points.map((val,index)=><option value={index}>({val.x},{val.y})</option>)}
+                    {points.map((val,index)=><option value={index}>({val.x.toFixed(2)},{val.y.toFixed(2)})</option>)}
                 </select>
                 <input placeholder='compass degree' type="number" pattern='[0-9]' ref={angle}/>
                 <input placeholder='distance to next point' type="number" pattern='[0-9]' ref={distance}/>
@@ -59,7 +59,7 @@ export default function ADForm(
     function showPoint(){
         return(
             <>
-                <div> Added Point : ({point!.x},{point!.y})</div>
+                <div> Added Point : ({point!.x.toFixed(2)},{point!.y.toFixed(2)})</div>
                 <button onClick={setMoveToPoint}>move to point</button>
                 <button onClick={removeSelf}>X</button>
             </>

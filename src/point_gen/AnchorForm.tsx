@@ -52,7 +52,7 @@ export default function AnchorForm(
     function showPoint(){
         return(
             <>
-                <div> anchor at:({point!.x},{point!.y})</div>
+                <div> anchor at:({point!.x.toFixed(2)},{point!.y.toFixed(2)})</div>
                 <button onClick={setMoveToPoint}>move to point</button>
                 <button onClick={removeSelf}>X</button>
             </>
